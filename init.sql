@@ -92,9 +92,12 @@ CREATE TABLE schedule_listings (
 
 -- Indexes
 
-CREATE UNIQUE INDEX tag_name_idx ON tags (name);
+CREATE UNIQUE INDEX ON tags (name);
 
-CREATE INDEX comment_id_idx ON comments (id);
+CREATE INDEX ON events (name);
+CREATE INDEX ON listings (price);
+CREATE INDEX ON tags (name);
+CREATE INDEX ON comment_votes (comment_id);
 
 -- Views
 
