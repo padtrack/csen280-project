@@ -3,6 +3,9 @@ should mention why im using postgres instead of mysql
 - https://survey.stackoverflow.co/2024/technology#most-popular-technologies-database
 - mention how mysql doesn't seem to have multirange equivalent, for example
 
+design decisions
+- temporal tables
+
 potential problems
 - role (level) is not a set value / user cannot have multiple roles
 
