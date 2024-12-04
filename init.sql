@@ -90,6 +90,12 @@ CREATE TABLE schedule_listings (
     PRIMARY KEY (schedule_id, listing_id)
 );
 
+-- Indexes
+
+CREATE UNIQUE INDEX tag_name_idx ON tags (name);
+
+CREATE INDEX comment_id_idx ON comments (id);
+
 -- Views
 
 CREATE VIEW comment_scores AS
@@ -128,29 +134,59 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER is_verified_merchants
-BEFORE INSERT ON merchants
+BEFORE INSERT OR UPDATE ON merchants
 FOR EACH ROW
 EXECUTE FUNCTION is_verified();
 
 CREATE TRIGGER is_verified_listings
-BEFORE INSERT ON listings
+BEFORE INSERT OR UPDATE ON listings
 FOR EACH ROW
 EXECUTE FUNCTION is_verified();
 
 CREATE TRIGGER is_verified_tags
-BEFORE INSERT ON tags
+BEFORE INSERT OR UPDATE ON tags
 FOR EACH ROW
 EXECUTE FUNCTION is_verified();
 
 CREATE TRIGGER is_verified_comments
-BEFORE INSERT ON comments
+BEFORE INSERT OR UPDATE ON comments
 FOR EACH ROW
 EXECUTE FUNCTION is_verified();
 
 CREATE TRIGGER is_verified_comment_votes
-BEFORE INSERT ON comment_votes
+BEFORE INSERT OR UPDATE ON comment_votes
 FOR EACH ROW
 EXECUTE FUNCTION is_verified();
+
+CREATE FUNCTION validate_name()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.name !~ '^[a-z0-9_]+$' THEN
+        RAISE EXCEPTION '"%" contains invalid characters.', NEW.name;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER validate_user_name
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION validate_name();
+
+CREATE TRIGGER validate_event_name
+BEFORE INSERT OR UPDATE ON events
+FOR EACH ROW
+EXECUTE FUNCTION validate_name();
+
+CREATE TRIGGER validate_merchant_name
+BEFORE INSERT OR UPDATE ON merchants
+FOR EACH ROW
+EXECUTE FUNCTION validate_name();
+
+CREATE TRIGGER validate_tag_name
+BEFORE INSERT OR UPDATE ON tags
+FOR EACH ROW
+EXECUTE FUNCTION validate_name();
 
 -- Procedures
 
@@ -191,6 +227,9 @@ $$;
 
 INSERT INTO users (email, name, level) VALUES ('admin@demo.org', 'admin', 'admin');
 INSERT INTO users (email, name) VALUES ('demo@example.com', 'demo');
+-- won't work because of invalid characters
+-- INSERT INTO users (email, name) VALUES ('bad@example.com', '');
+-- INSERT INTO users (email, name) VALUES ('bad@example.com', 'user name');
 
 SELECT * FROM users;
 
