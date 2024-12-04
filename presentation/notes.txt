@@ -1,0 +1,17 @@
+should mention why im using postgres instead of mysql
+- postgres is a decent bit more popular than mysql in industry and i wanted to try it out
+- https://survey.stackoverflow.co/2024/technology#most-popular-technologies-database
+- mention how mysql doesn't seem to have multirange equivalent, for example
+
+potential problems
+- role (level) is not a set value / user cannot have multiple roles
+
+
+presentation time budget:
+
+section                                     minutes (10 total)
+intro (background, on the proposal)         1
+design decisions (docker, postgres, etc.)   1
+schema                                      1
+demo (show corner cases)                    2
+future work                                 1
