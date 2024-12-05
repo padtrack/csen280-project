@@ -197,6 +197,31 @@ BEFORE INSERT OR UPDATE ON tags
 FOR EACH ROW
 EXECUTE FUNCTION validate_name();
 
+CREATE OR REPLACE FUNCTION alias_tag()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'UPDATE' AND OLD.name IS DISTINCT FROM NEW.name THEN
+        UPDATE tags
+        SET name = NEW.name
+        WHERE name = OLD.name;
+    ELSE
+        INSERT INTO tags (user_id, type, name)
+        VALUES (NEW.user_id, 'general', NEW.name);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER alias_tag_event
+BEFORE INSERT OR UPDATE ON events
+FOR EACH ROW
+EXECUTE FUNCTION alias_tag();
+
+CREATE TRIGGER alias_tag_merchant
+BEFORE INSERT OR UPDATE ON merchants
+FOR EACH ROW
+EXECUTE FUNCTION alias_tag();
+
 -- Procedures
 
 CREATE PROCEDURE insert_listing_tags(
