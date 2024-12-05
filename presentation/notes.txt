@@ -9,12 +9,16 @@ design decisions
 potential problems
 - role (level) is not a set value / user cannot have multiple roles
 
+future work
+- moderation ("flagging")
+- locations and maps -> schedules
 
 presentation time budget:
 
-section                                     minutes (10 total)
+section                                     minutes (8 total)
 intro (background, on the proposal)         1
 design decisions (docker, postgres, etc.)   1
-schema                                      1
-demo (show corner cases)                    2
+schema and erd                              1
+advanced features                           1
+demo (show corner cases)                    3
 future work                                 1
