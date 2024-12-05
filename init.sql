@@ -90,6 +90,12 @@ CREATE TABLE schedule_listings (
     PRIMARY KEY (schedule_id, listing_id)
 );
 
+CREATE TABLE favorites (
+    user_id INTEGER REFERENCES users (id),
+    listing_id INTEGER REFERENCES listings (id),
+    PRIMARY KEY (user_id, listing_id)
+);
+
 -- Indexes
 
 CREATE UNIQUE INDEX ON tags (name);
